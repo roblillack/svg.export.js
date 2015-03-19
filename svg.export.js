@@ -63,13 +63,14 @@
           }
 
         } else if (this instanceof SVG.Text || this instanceof SVG.TSpan || this instanceof SVG.TextPath) {
-          for (i = 0, il = this.node.childNodes.length; i < il; i++)
+          for (i = 0, il = this.node.childNodes.length; i < il; i++) {
             if (this.node.childNodes[i].instance instanceof SVG.TSpan)
               node += this.node.childNodes[i].instance.exportSvg(options, level + 1)
             else if (this.node.childNodes[i].instance instanceof SVG.TextPath)
               node += this.node.childNodes[i].instance.exportSvg(options, level + 1)
             else
-              node += this.node.childNodes[i].nodeValue.replace(/&/g,'&amp;')
+              node += _encodeHtmlSpecialChars(this.node.firstChild.nodeValue);
+          }
 
         } else if (SVG.ComponentTransferEffect && this instanceof SVG.ComponentTransferEffect) {
           this.rgb.each(function() {
@@ -158,5 +159,13 @@
     
     return value;
   }
+  
+  function _encodeHtmlSpecialChars(unsafe) {
+		return unsafe
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;");
+	}
 
 }).call(this);
