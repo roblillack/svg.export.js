@@ -33,9 +33,9 @@
           if (options.height)
             this.attr('height', options.height)
         }
-          
+
         /* open node */
-        node += whitespaced('<' + name + this.attrToString() + '>', options.whitespace, level)
+        node += whitespaced('<' + name + this.attrToString() + '>', options.whitespace, level, this instanceof SVG.TSpan)
         
         /* reset size and add description */
         if (this instanceof SVG.Doc) {
@@ -79,7 +79,10 @@
         }
         
         /* close node */
-        node += whitespaced('</' + name + '>', options.whitespace, level)
+        node += whitespaced('</' + name + '>', options.whitespace && !(this instanceof SVG.TSpan), level)
+        if (this instanceof SVG.TSpan) {
+          node += '\n';
+        }
       }
       
       return node
@@ -140,7 +143,7 @@
   /////////////
 
   // Whitespaced string
-  function whitespaced(value, add, level) {
+  function whitespaced(value, add, level, skipNewLine) {
     if (add) {
       var whitespace = ''
         , space = add === true ? '  ' : add || ''
@@ -150,7 +153,7 @@
         whitespace += space
       
       /* add whitespace */
-      value = whitespace + value + '\n'
+      value = whitespace + value + (skipNewLine == true ? '' : '\n')
     }
     
     return value;
