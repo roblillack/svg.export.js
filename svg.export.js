@@ -44,7 +44,12 @@
           , height: height
           })
           
-          node += whitespaced('<desc>Created with svg.js [http://svgjs.com]</desc>', options.whitespace, level + 1)
+          var desc = options.description;
+          if (desc == null) {
+            desc = "Created with svg.js [http://svgjs.com]";
+          }
+          
+          node += whitespaced('<desc>' + _encodeHtmlSpecialChars(desc) + '</desc>', options.whitespace, level + 1)
           /* Add defs... */
 					node += this.defs().exportSvg(options, level + 1);
         }
